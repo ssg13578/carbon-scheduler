@@ -1,0 +1,68 @@
+slot_seconds: 900
+horizon_slots: 8
+cooldown_slots: 2
+
+use_prometheus: false
+use_mcad: false
+solver: CBC
+
+regions:
+  - name: KR
+    kubecontext: k3d-kr
+    prometheus: { url: "http://prom-kr:9090" }
+  - name: JP
+    kubecontext: k3d-jp
+    prometheus: { url: "http://prom-jp:9090" }
+  - name: US
+    kubecontext: k3d-us
+    prometheus: { url: "http://prom-us:9090" }
+  - name: EU
+    kubecontext: k3d-eu
+    prometheus: { url: "http://prom-eu:9090" }
+
+job_defaults:
+  image: ghcr.io/yourorg/batch:latest
+  cpu: 1
+  mem_gb: 2
+  gpu: 0
+  runtime_slots: 2
+  deadline_slack_slots: 8
+  affinity_regions: []
+  data_gb: 1.0
+
+costs:
+  watt_cpu: 30.0
+  lambda_plan_dev: 100.0
+
+# 리전간 네트워크 비용 행렬 (gCO2 per GB)
+network_costs:
+  KR:
+    KR: 0
+    JP: 5
+    US: 12
+    EU: 14
+  JP:
+    KR: 5
+    JP: 0
+    US: 10
+    EU: 11
+  US:
+    KR: 12
+    JP: 10
+    US: 0
+    EU: 6
+  EU:
+    KR: 14
+    JP: 11
+    US: 6
+    EU: 0
+
+migration_policy:
+  allow: true       # true = 재스케줄링/이동 허용, false = 기존 region 유지 강제
+
+mcad:
+  hub_context: k3d-hub
+  namespace: mcad
+
+kubectl:
+  dry_run: true
