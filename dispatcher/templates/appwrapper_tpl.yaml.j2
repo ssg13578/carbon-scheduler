@@ -1,0 +1,33 @@
+apiVersion: mcad.ibm.com/v1beta1
+kind: AppWrapper
+metadata:
+  name: aw-{{ job_id }}
+  namespace: {{ namespace }}
+  labels:
+    caspian/job-id: {{ job_id }}
+    caspian/region: {{ region }}
+spec:
+  resources:
+    GenericItems:
+    - generictemplate:
+        apiVersion: batch/v1
+        kind: Job
+        metadata:
+          name: {{ job_id }}
+        spec:
+          template:
+            spec:
+              restartPolicy: Never
+              containers:
+              - name: task
+                image: {{ image }}
+                command: ["/bin/sh","-c"]
+                args: ["echo Running {{ job_id }} on {{ region }}; sleep 20"]
+                resources:
+                  requests:
+                    cpu: "{{ cpu }}"
+                    memory: "{{ mem_gb }}Gi"
+                  limits:
+                    cpu: "{{ cpu }}"
+                    memory: "{{ mem_gb }}Gi"
+      replicas: 1

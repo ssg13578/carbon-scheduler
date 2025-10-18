@@ -1,0 +1,26 @@
+{
+    "title": "Caspian-Style Carbon-Aware Scheduler",
+    "panels": [
+      {
+        "type": "timeseries",
+        "title": "Planned CO₂ (kg)",
+        "targets": [{ "expr": "plan_co2_estimate_kg" }]
+      },
+      {
+        "type": "timeseries",
+        "title": "Migration Events",
+        "targets": [{ "expr": "increase(migration_event_total[5m])" }]
+      },
+      {
+        "type": "timeseries",
+        "title": "Region Carbon Intensity (gCO₂/kWh)",
+        "targets": [{ "expr": "region_ci_gco2_kwh" }]
+      },
+      {
+        "type": "stat",
+        "title": "Solver Optimal",
+        "targets": [{ "expr": "solver_optimal" }]
+      }
+    ]
+  }
+  
